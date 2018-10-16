@@ -58,8 +58,18 @@ public class Lexer {
 		/*{ ?, ?, ?, ?, ?, ?}, /* 状態0 */
 		/*{ ?, ?, ?, ?, ?, ?}, /* 状態1 */
 		/*...*/
+	        {1, -1, 2, 3, 4, -1},	// 初期状態(0)		   受理×
+		{-1, -1, 5, 5, -1, -1}, // 最初がP(1)		   受理×
+		{1, 6, -1, 7, 4, -1},	// 0(2)		           受理〇
+		{1, -1, 3, 3, 4, -1},	// N(3)		           受理〇
+		{-1, -1, 4, 4, 4, -1},	// A(4)		           受理〇
+		{-1, -1, 5, 5, -1, -1}, // 小数部がある(5)	   受理〇
+		{-1, -1, 4, 4, 4, -1},	// 0X			   受理×
+		{-1, -1, 7, 7, 4, -1}	// 0N...		   受理×
 	};
-
+        // -1は受理できない 
+        int [] accept = {-1, -1, 0, 0, 0, 1, -1. -1};
+    
 	/*
 	 * 文字列 str の start 文字目から字句解析しトークンを一つ返す
 	 */
@@ -83,8 +93,14 @@ public class Lexer {
 
 			/* TODO */
 			/* 行先がなければループを抜ける */
+			if (nextState == -1) break;
 			/* 行先が受理状態であれば「最後の受理状態」を更新する */
-
+			if (accept[nextState] != -1) {
+			    acceptPos = p;
+			    if (accept[nextState] == 0) acceptMarker = Token.TYPE_INT;
+				else if (accept[nextState] == 1) acceptMarker = Token.TYPE_DEC;
+				else System.out.println("error");
+			}
 			currentState = nextState;
 		}
 		
